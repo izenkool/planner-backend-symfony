@@ -4,7 +4,7 @@ This is a backend project for a planner application, built with the Symfony PHP 
 
 ## Building and Running
 
-**TODO:** Add instructions on how to build and run the project.
+Проект запускается в docker
 
 ### Running the application
 
