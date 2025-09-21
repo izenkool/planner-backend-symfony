@@ -10,3 +10,7 @@ db-shell:
 	docker compose exec postgres /bin/sh
 ps:
 	docker compose ps
+migrate:
+	docker compose exec app php bin/console doctrine:migrations:migrate
+rollback:
+	docker compose exec app php bin/console doctrine:migrations:migrate prev
