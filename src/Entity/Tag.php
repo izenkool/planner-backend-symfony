@@ -22,8 +22,9 @@ class Tag
     #[ORM\ManyToMany(targetEntity: Task::class, mappedBy: 'tags')]
     private Collection $tasks;
 
-    public function __construct()
+    public function __construct(string $name)
     {
+        $this->name = $name;
         $this->tasks = new ArrayCollection();
     }
 

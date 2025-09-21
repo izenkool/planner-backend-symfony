@@ -23,6 +23,12 @@ class Task
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[ORM\Column]
+    private ?int $priority = null;
+
+    #[ORM\Column]
+    private bool $completed = false;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $created_at = null;
 
@@ -44,9 +50,14 @@ class Task
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'tasks')]
     private Collection $tags;
 
-    public function __construct()
+    public function __construct(string $title, string $description, int $priority)
     {
+        $this->title = $title;
+        $this->description = $description;
+        $this->priority = $priority;
         $this->tags = new ArrayCollection();
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
     }
 
     public function getId(): ?int
@@ -74,6 +85,30 @@ class Task
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPriority(): ?int
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(int $priority): static
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->completed;
+    }
+
+    public function setCompleted(bool $completed): static
+    {
+        $this->completed = $completed;
 
         return $this;
     }

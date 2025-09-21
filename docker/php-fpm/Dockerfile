@@ -13,12 +13,11 @@ RUN docker-php-ext-install pdo pdo_pgsql zip
 # Install Composer
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
-ARG UID
-ARG GID
+ARG UID=1000
+ARG GID=1000
 
-RUN groupmod -g $GID www-data && usermod -u $UID -g $GID www-data
+RUN groupadd -g $GID dev && useradd -u $UID -g $GID -m dev
 
-USER www-data
+USER dev
 
 WORKDIR /var/www/html
-
