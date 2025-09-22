@@ -1,6 +1,7 @@
 # Main
 
 Используй русский язык для ответов
+При создании миграций удаляй из них $this->addSql('CREATE SCHEMA public') и лишние комментарии
 
 # Project Overview
 

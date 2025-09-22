@@ -2,36 +2,37 @@
 
 namespace App\Entity;
 
+use App\Enum\RecurrenceTypeEnum;
 use App\Repository\RecurrenceRuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: RecurrenceRuleRepository::class)]
 #[ORM\Table(name: 'recurrence_rules')]
 class RecurrenceRule
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    #[Groups(['task:export', 'task:import'])]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[Groups(['task:export', 'task:import', 'recurrence_rule:read'])]
+    private Uuid $id;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['task:export', 'task:import'])]
-    private ?string $recurrence_type = null;
+    #[ORM\Column(length: 255, enumType: RecurrenceTypeEnum::class)]
+    #[Groups(['task:export', 'task:import', 'recurrence_rule:read'])]
+    private ?RecurrenceTypeEnum $recurrence_type = null;
 
     #[ORM\Column]
-    #[Groups(['task:export', 'task:import'])]
+    #[Groups(['task:export', 'task:import', 'recurrence_rule:read'])]
     private ?int $interval = null;
 
     #[ORM\Column]
-    #[Groups(['task:export', 'task:import'])]
+    #[Groups(['task:export', 'task:import', 'recurrence_rule:read'])]
     private ?int $days_of_week = null;
 
     #[ORM\Column]
-    #[Groups(['task:export', 'task:import'])]
+    #[Groups(['task:export', 'task:import', 'recurrence_rule:read'])]
     private ?int $days_of_month = null;
 
     #[ORM\Column]
@@ -43,20 +44,21 @@ class RecurrenceRule
 
     public function __construct()
     {
+        $this->id = Uuid::v7();
         $this->tasks = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-    public function getRecurrenceType(): ?string
+    public function getRecurrenceType(): ?RecurrenceTypeEnum
     {
         return $this->recurrence_type;
     }
 
-    public function setRecurrenceType(string $recurrence_type): static
+    public function setRecurrenceType(RecurrenceTypeEnum $recurrence_type): static
     {
         $this->recurrence_type = $recurrence_type;
 
