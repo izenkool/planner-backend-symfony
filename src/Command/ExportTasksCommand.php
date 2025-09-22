@@ -11,6 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
+use const JSON_PRETTY_PRINT;
+use const JSON_UNESCAPED_UNICODE;
 
 #[AsCommand(
     name: 'app:export-tasks',
@@ -39,7 +41,10 @@ class ExportTasksCommand extends Command
 
         try {
             $tasks = $this->taskRepository->findAll();
-            $data = $this->serializer->serialize($tasks, 'json', ['groups' => 'task:export']);
+            $data = $this->serializer->serialize($tasks, 'json', [
+                'groups' => 'task:export',
+                'json_encode_options' => JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE,
+            ]);
             file_put_contents($filePath, $data);
             $io->success('Tasks exported successfully.');
         } catch (Throwable $e) {
