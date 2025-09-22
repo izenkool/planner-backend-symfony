@@ -1,3 +1,7 @@
+# Main
+
+Используй русский язык для ответов
+
 # Project Overview
 
 This is a backend project for a planner application, built with the Symfony PHP framework.
@@ -5,18 +9,13 @@ This is a backend project for a planner application, built with the Symfony PHP 
 ## Building and Running
 
 Проект запускается в docker
+Все запросы должны делаться в контейнере через 'docker compose'
 
 ### Running the application
 
-```bash
-# TODO: Add command to run the application
-```
+Запускать ничего не надо, проект уже запущен
 
 ### Running tests
-
-```bash
-# TODO: Add command to run tests
-```
 
 ## Development Conventions
 

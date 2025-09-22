@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/tags')]
 class TagController extends AbstractController
@@ -38,9 +39,9 @@ class TagController extends AbstractController
     }
 
     #[Route('/{tagId}', methods: 'DELETE')]
-    public function delete(int $tagId): JsonResponse
+    public function delete(string $tagId): JsonResponse
     {
-        $tag = $this->tagRepository->find($tagId);
+        $tag = $this->tagRepository->find(Uuid::fromString($tagId));
 
         $this->entityManager->remove($tag);
         $this->entityManager->flush();

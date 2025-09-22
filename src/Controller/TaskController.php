@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/tasks')]
 class TaskController extends AbstractController
@@ -27,9 +28,9 @@ class TaskController extends AbstractController
     public function create(#[MapRequestPayload] TaskDTO $dto): JsonResponse
     {
         $task = new Task(
-            $dto->title,
-            $dto->description,
-            $dto->priority
+            title: $dto->title,
+            description: $dto->description,
+            priority: $dto->priority
         );
 
         foreach ($dto->tags as $tagName) {
@@ -44,9 +45,9 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{taskId}', methods: 'GET')]
-    public function get(int $taskId): JsonResponse
+    public function get(string $taskId): JsonResponse
     {
-        return $this->json($this->taskRepository->find($taskId));
+        return $this->json($this->taskRepository->find(Uuid::fromString($taskId)));
     }
 
     #[Route(methods: 'GET')]
@@ -65,9 +66,9 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{taskId}', methods: 'PUT')]
-    public function update(int $taskId, #[MapRequestPayload] TaskDTO $dto): JsonResponse
+    public function update(string $taskId, #[MapRequestPayload] TaskDTO $dto): JsonResponse
     {
-        $task = $this->taskRepository->find($taskId);
+        $task = $this->taskRepository->find(Uuid::fromString($taskId));
 
         $task->setTitle($dto->title);
         $task->setDescription($dto->description);
@@ -88,9 +89,9 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{taskId}', methods: 'PATCH')]
-    public function complete(int $taskId): JsonResponse
+    public function complete(string $taskId): JsonResponse
     {
-        $task = $this->taskRepository->find($taskId);
+        $task = $this->taskRepository->find(Uuid::fromString($taskId));
         $task->setCompleted(true);
 
         $this->entityManager->flush();
@@ -99,9 +100,9 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{taskId}', methods: 'DELETE')]
-    public function delete(int $taskId): JsonResponse
+    public function delete(string $taskId): JsonResponse
     {
-        $task = $this->taskRepository->find($taskId);
+        $task = $this->taskRepository->find(Uuid::fromString($taskId));
 
         $this->entityManager->remove($task);
         $this->entityManager->flush();

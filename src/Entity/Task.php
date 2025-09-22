@@ -7,60 +7,44 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 #[ORM\Table(name: 'tasks')]
 class Task
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
-
-    #[ORM\Column]
-    private ?int $priority = null;
-
-    #[ORM\Column]
-    private bool $completed = false;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $created_at = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $updated_at = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $completed_at = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $deadline = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $starts_at = null;
-
-    #[ORM\ManyToOne(inversedBy: 'tasks')]
-    private ?RecurrenceRule $recurrence_rules = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private Uuid $id;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'tasks')]
     private Collection $tags;
 
-    public function __construct(string $title, string $description, int $priority)
-    {
-        $this->title = $title;
-        $this->description = $description;
-        $this->priority = $priority;
+    public function __construct(
+        #[ORM\Column(length: 255)]
+        private string $title,
+        #[ORM\Column(type: Types::TEXT)]
+        private string $description,
+        #[ORM\Column]
+        private int $priority,
+        #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+        private ?\DateTimeInterface $created_at = new \DateTime(),
+        #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+        private ?\DateTimeInterface $updated_at = new \DateTime(),
+        #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+        private ?\DateTimeInterface $completed_at = null,
+        #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+        private ?\DateTimeInterface $deadline = null,
+        #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+        private ?\DateTimeInterface $starts_at = null,
+        #[ORM\ManyToOne(inversedBy: 'tasks')]
+        private ?RecurrenceRule $recurrence_rules = null
+    ) {
+        $this->id = Uuid::v7();
         $this->tags = new ArrayCollection();
-        $this->created_at = new \DateTime();
-        $this->updated_at = new \DateTime();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -103,12 +87,16 @@ class Task
 
     public function isCompleted(): bool
     {
-        return $this->completed;
+        return $this->completed_at !== null;
     }
 
     public function setCompleted(bool $completed): static
     {
-        $this->completed = $completed;
+        if ($completed) {
+            $this->completed_at = new \DateTime();
+        } else {
+            $this->completed_at = null;
+        }
 
         return $this;
     }

@@ -9,7 +9,6 @@ class TaskDTO
     #[Assert\NotBlank]
     public string $title;
 
-    #[Assert\NotBlank]
     public string $description;
 
     #[Assert\NotBlank]
@@ -19,6 +18,5 @@ class TaskDTO
     /**
      * @var string[]
      */
-    #[Assert\NotBlank]
     public array $tags;
 }
