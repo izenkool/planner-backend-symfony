@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
@@ -15,29 +16,40 @@ class Task
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
+    #[Groups(['task:export', 'task:import'])]
     private Uuid $id;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'tasks')]
+    #[Groups(['task:export', 'task:import'])]
     private Collection $tags;
 
     public function __construct(
         #[ORM\Column(length: 255)]
+        #[Groups(['task:export', 'task:import'])]
         private string $title,
         #[ORM\Column(type: Types::TEXT)]
+        #[Groups(['task:export', 'task:import'])]
         private string $description,
         #[ORM\Column]
+        #[Groups(['task:export', 'task:import'])]
         private int $priority,
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+        #[Groups(['task:export', 'task:import'])]
         private ?\DateTimeInterface $created_at = new \DateTime(),
         #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+        #[Groups(['task:export', 'task:import'])]
         private ?\DateTimeInterface $updated_at = new \DateTime(),
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+        #[Groups(['task:export', 'task:import'])]
         private ?\DateTimeInterface $completed_at = null,
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+        #[Groups(['task:export', 'task:import'])]
         private ?\DateTimeInterface $deadline = null,
         #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+        #[Groups(['task:export', 'task:import'])]
         private ?\DateTimeInterface $starts_at = null,
         #[ORM\ManyToOne(inversedBy: 'tasks')]
+        #[Groups(['task:export', 'task:import'])]
         private ?RecurrenceRule $recurrence_rules = null
     ) {
         $this->id = Uuid::v7();

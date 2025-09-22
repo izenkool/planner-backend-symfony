@@ -6,6 +6,7 @@ use App\Repository\RecurrenceRuleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RecurrenceRuleRepository::class)]
 #[ORM\Table(name: 'recurrence_rules')]
@@ -14,21 +15,27 @@ class RecurrenceRule
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['task:export', 'task:import'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['task:export', 'task:import'])]
     private ?string $recurrence_type = null;
 
     #[ORM\Column]
+    #[Groups(['task:export', 'task:import'])]
     private ?int $interval = null;
 
     #[ORM\Column]
+    #[Groups(['task:export', 'task:import'])]
     private ?int $days_of_week = null;
 
     #[ORM\Column]
+    #[Groups(['task:export', 'task:import'])]
     private ?int $days_of_month = null;
 
     #[ORM\Column]
+    #[Groups(['task:export', 'task:import'])]
     private ?bool $active = null;
 
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'recurrence_rules')]

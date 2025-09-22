@@ -10,6 +10,7 @@ This is a backend project for a planner application, built with the Symfony PHP 
 
 Проект запускается в docker
 Все запросы должны делаться в контейнере через 'docker compose'
+основной сервис называется app
 
 ### Running the application
 

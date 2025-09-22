@@ -6,6 +6,7 @@ use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
@@ -14,6 +15,7 @@ class Tag
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
+    #[Groups(['task:export', 'task:import'])]
     private Uuid $id;
 
     #[ORM\ManyToMany(targetEntity: Task::class, mappedBy: 'tags')]
@@ -21,6 +23,7 @@ class Tag
 
     public function __construct(
         #[ORM\Column(length: 255, unique: true)]
+        #[Groups(['task:export', 'task:import'])]
         private string $name
     ) {
         $this->id = Uuid::v7();
